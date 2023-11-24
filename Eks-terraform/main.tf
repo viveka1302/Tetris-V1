@@ -27,11 +27,19 @@ data "aws_vpc" "default" {
 }
 #get public subnets for cluster
 data "aws_subnets" "public" {
+  for_each = toset(data.aws_availability_zones.available.names)
+
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
+
+  filter {
+    name   = "availability-zone"
+    values = [each.value]
+  }
 }
+
 #cluster provision
 resource "aws_eks_cluster" "example" {
   name     = "EKS_CLOUDvivek"
