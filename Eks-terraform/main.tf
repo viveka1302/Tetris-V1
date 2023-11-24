@@ -27,7 +27,7 @@ data "aws_vpc" "default" {
 }
 #get public subnets for cluster
 data "aws_subnets" "public" {
-  for_each = toset('ap-south-1a', 'ap-south-1b')
+  for_each = toset("ap-south-1a", "ap-south-1b")
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
