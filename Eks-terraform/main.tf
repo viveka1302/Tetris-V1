@@ -39,7 +39,18 @@ data "aws_subnets" "public" {
 }
 #cluster provision
 resource "aws_eks_cluster" "example" {
-  name     = "EKS_CLOUD"
+  data "aws_subnets" "public" {
+  for_each = toset(["ap-south-1a", "ap-south-1b"])
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+  filter {
+    name   = "availability-zone"
+    values = [each.value]
+  }
+}
+  name     = "EKS_CLOUDvivek"
   role_arn = aws_iam_role.example.arn
 
   vpc_config {
