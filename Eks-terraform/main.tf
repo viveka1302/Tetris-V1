@@ -44,7 +44,28 @@ data "aws_subnets" "public" {
 data "aws_availability_zones" "available" {}
 
 resource "aws_eks_cluster" "example" {
-  name     = "EKS_CLOUD"
+  data "aws_vpc" "default" {
+  default = true
+}
+
+# Get public subnets for the default VPC in multiple AZs
+data "aws_subnets" "public" {
+  for_each = toset(data.aws_availability_zones.available.names)
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+
+  filter {
+    name   = "availability-zone"
+    values = [each.value]
+  }
+}
+
+# Declare the availability zones data source
+data "aws_availability_zones" "available" {}
+  name     = "EKS_CLOUDvivek"
   role_arn = aws_iam_role.example.arn
 
   vpc_config {
