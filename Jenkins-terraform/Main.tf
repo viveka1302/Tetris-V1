@@ -1,5 +1,5 @@
-resource "aws_iam_role" "example_role" {
-  name = "Jenkins-terraform"
+resource "aws_iam_role" "Vivek_role" {
+  name = "Jenkins-terraform1"
 
   assume_role_policy = <<EOF
 {
@@ -17,19 +17,19 @@ resource "aws_iam_role" "example_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "example_attachment" {
-  role       = aws_iam_role.example_role.name
+resource "aws_iam_role_policy_attachment" "Vivek_attachment" {
+  role       = aws_iam_role.Vivek_role.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
-resource "aws_iam_instance_profile" "example_profile" {
-  name = "Jenkins-terraform"
-  role = aws_iam_role.example_role.name
+resource "aws_iam_instance_profile" "Vivek_profile" {
+  name = "Jenkins-terraform1"
+  role = aws_iam_role.Vivek_role.name
 }
 
 
-resource "aws_security_group" "Jenkins-sg" {
-  name        = "Jenkins-Security Group"
+resource "aws_security_group" "Jenkins1-sg" {
+  name        = "Jenkins1-Security Group"
   description = "Open 22,443,80,8080,9000"
 
   # Define a single ingress rule to allow traffic on all specified ports
@@ -55,20 +55,20 @@ resource "aws_security_group" "Jenkins-sg" {
   }
 
   tags = {
-    Name = "Jenkins-sg"
+    Name = "Jenkins1-sg"
   }
 }
 
-resource "aws_instance" "jenkins" {
+resource "aws_instance" "jenkins1" {
   ami                    = "ami-0f5ee92e2d63afc18"
   instance_type          = "t2.large"
-  key_name               = "Mumbai"
-  vpc_security_group_ids = [aws_security_group.Jenkins-sg.id]
+  key_name               = "VivekKey"
+  vpc_security_group_ids = [aws_security_group.Jenkins1-sg.id]
   user_data              = templatefile("./install_jenkins.sh", {})
-  iam_instance_profile   = aws_iam_instance_profile.example_profile.name
+  iam_instance_profile   = aws_iam_instance_profile.Vivek_profile.name
 
   tags = {
-    Name = "Jenkins-Argo"
+    Name = "Jenkins-Argo123"
   }
 
   root_block_device {
@@ -76,11 +76,11 @@ resource "aws_instance" "jenkins" {
   }
 }
 
-resource "aws_eip" "jenkins" {
-  instance = aws_instance.jenkins.id
+resource "aws_eip" "jenkins1" {
+  instance = aws_instance.jenkins1.id
   domain   = "vpc"
 
   tags = {
-    Name = "Jenkins-EIP"
+    Name = "Jenkins1-EIP"
   }
 }
